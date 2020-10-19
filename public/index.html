@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .image {
+            width: 100px;
+            height: 100px;
+        }
+
+        .image img {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <form id='form'>
+        <label>姓名: <input type="text" id='user' name="user" /></label>
+        <input type="file" id="foo" name="file" multiple="multiple">
+    </form>
+    <!-- 图片回显 -->
+    <div class="image">
+
+    </div>
+    <button>提交</button>
+</body>
+
+</html>
+<script>
+    var form = document.getElementById('form');
+    var user = document.getElementById('user');
+    var btn = document.getElementsByTagName('button')[0];
+    var file = document.getElementById('foo');
+    var showImg = document.getElementsByClassName('image')[0];
+    file.onchange = (e) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.files[0]);
+        var img = new Image();
+        reader.onloadend = (e) => {
+            img.src = reader.result;
+            showImg.appendChild(img);
+        }
+    }
+    btn.onclick = () => {
+        var ajx = new XMLHttpRequest();
+        ajx.open("post", "/upload", true);
+        var fd = new FormData(form);
+        ajx.onreadystatechange = function () {
+            if (ajx.readyState == 4 && ajx.status == 200) {
+                console.log(ajx);
+            }
+        }
+        ajx.send(fd);
+    }
+</script>
